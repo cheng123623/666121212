@@ -36,7 +36,7 @@ const MainLayout = {
                 <el-menu-item index="/main/category"><i class="el-icon-menu"></i>分类管理</el-menu-item>
                 <el-menu-item index="/main/dish"><i class="el-icon-food"></i>菜品管理</el-menu-item>
                 <el-menu-item index="/main/setmeal"><i class="el-icon-s-grid"></i>套餐管理</el-menu-item>
-                <el-menu-item index="/main/order"><i class="el-icon-s-order"></i>订单管理</el-menu-item>
+                <el-menu-item index="/main/order"><i class="el-icon-s-order"></i>订单管理<span v-if="orderNotify>0" style="background:red;color:#fff;border-radius:10px;padding:2px 6px;font-size:12px;margin-left:4px">{{orderNotify}}</span></el-menu-item>
                 <el-menu-item index="/main/report"><i class="el-icon-data-analysis"></i>数据统计</el-menu-item>
             </el-menu>
         </div>
@@ -44,7 +44,19 @@ const MainLayout = {
             <div class="topbar"><h3>苍穹外卖管理系统</h3><el-button type="text" @click="logout">退出登录</el-button></div>
             <div class="content"><router-view></router-view></div>
         </div></div>`,
-    methods: { logout() { localStorage.clear(); this.$router.push('/login'); } }
+    data() { return { orderNotify: 0 }; },
+    created() { this.connectWebSocket(); },
+    methods: {
+        logout() { localStorage.clear(); this.$router.push('/login'); },
+        connectWebSocket() {
+            const ws = new WebSocket('ws://localhost:8080/ws/admin');
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === 1) { this.orderNotify++; ElementUI.Notification.info({title:'来单提醒',message:data.content,duration:5000}); }
+            };
+            ws.onclose = () => { setTimeout(() => this.connectWebSocket(), 5000); };
+        }
+    }
 };
 
 // ==================== 员工管理 ====================
@@ -203,15 +215,30 @@ const Report = {
         <div class="stat-cards"><div class="stat-card"><div class="num">¥{{data.turnover || 0}}</div><div class="label">营业额</div></div>
             <div class="stat-card"><div class="num">{{data.validOrderCount || 0}}</div><div class="label">有效订单数</div></div>
             <div class="stat-card"><div class="num">{{data.newUsers || 0}}</div><div class="label">新增用户</div></div></div>
-        <div class="table-card"><h4>订单统计</h4><el-row :gutter="20"><el-col :span="8"><el-card>待接单: {{orderStats.toBeConfirmed}}</el-card></el-col>
-            <el-col :span="8"><el-card>已接单: {{orderStats.confirmed}}</el-card></el-col>
-            <el-col :span="8"><el-card>派送中: {{orderStats.deliveryInProgress}}</el-card></el-col></el-row></div></div>`,
+        <div class="table-card" style="margin-bottom:20px"><h4 style="margin-bottom:10px">订单状态统计</h4><el-row :gutter="20"><el-col :span="8"><el-card>待接单: <b>{{orderStats.toBeConfirmed}}</b></el-card></el-col>
+            <el-col :span="8"><el-card>已接单: <b>{{orderStats.confirmed}}</b></el-card></el-col>
+            <el-col :span="8"><el-card>派送中: <b>{{orderStats.deliveryInProgress}}</b></el-card></el-col></el-row></div>
+        <div class="table-card"><h4 style="margin-bottom:10px">营业额趋势</h4><div id="chart" style="width:100%;height:350px"></div></div></div>`,
     data() { return { dateRange: [], data: {}, orderStats: {} }; },
-    created() { this.loadStats(); },
+    mounted() { this.loadStats(); this.initChart(); },
     methods: {
-        loadData() { if (this.dateRange && this.dateRange.length === 2) { axios.get('/report/turnoverStatistics', { params: { begin: this.formatDate(this.dateRange[0]), end: this.formatDate(this.dateRange[1]) } }).then(res => this.data = res.data); } },
-        loadStats() { axios.get('/report/orderStatistics').then(res => this.orderStats = res.data); },
-        formatDate(d) { const dt = new Date(d); return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0'); }
+        loadData() { if (this.dateRange && this.dateRange.length === 2) { axios.get('/report/turnoverStatistics', { params: { begin: this.formatDate(this.dateRange[0]), end: this.formatDate(this.dateRange[1]) } }).then(res => this.data = res.data || {}); } },
+        loadStats() { axios.get('/report/orderStatistics').then(res => this.orderStats = res.data || {}); },
+        formatDate(d) { const dt = new Date(d); return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0'); },
+        initChart() {
+            const chartDom = document.getElementById('chart');
+            if (!chartDom) return;
+            const chart = echarts.init(chartDom);
+            chart.setOption({
+                tooltip: { trigger: 'axis' },
+                xAxis: { type: 'category', data: ['周一','周二','周三','周四','周五','周六','周日'] },
+                yAxis: { type: 'value' },
+                series: [{ name: '营业额', type: 'line', data: [820,932,901,934,1290,1330,1320], smooth: true,
+                    areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{offset:0,color:'rgba(64,158,255,0.3)'},{offset:1,color:'rgba(64,158,255,0)'}] } },
+                    itemStyle: { color: '#409EFF' } }],
+                grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true }
+            });
+        }
     }
 };
 

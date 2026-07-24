@@ -1,5 +1,7 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
@@ -45,16 +47,17 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     public PageResult pageQuery(SetmealPageQueryDTO dto) {
-        List<Setmeal> list = setmealMapper.pageQuery(dto);
+        PageHelper.startPage(dto.getPage(), dto.getPageSize());
+        Page<Setmeal> page = setmealMapper.pageQuery(dto);
         List<SetmealVO> voList = new ArrayList<>();
-        for (Setmeal s : list) {
+        for (Setmeal s : page.getResult()) {
             SetmealVO vo = new SetmealVO();
             BeanUtils.copyProperties(s, vo);
             Category c = categoryMapper.getById(s.getCategoryId());
             if (c != null) vo.setCategoryName(c.getName());
             voList.add(vo);
         }
-        return new PageResult(voList.size(), voList);
+        return new PageResult(page.getTotal(), voList);
     }
 
     @Override

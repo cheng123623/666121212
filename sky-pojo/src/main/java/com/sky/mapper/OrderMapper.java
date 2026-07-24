@@ -1,11 +1,13 @@
 package com.sky.mapper;
 
+import com.github.pagehelper.Page;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.Orders;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
@@ -13,7 +15,7 @@ public interface OrderMapper {
 
     void insert(Orders orders);
 
-    List<Orders> pageQuery(OrdersPageQueryDTO dto);
+    Page<Orders> pageQuery(OrdersPageQueryDTO dto);
 
     void update(Orders orders);
 
@@ -37,4 +39,7 @@ public interface OrderMapper {
 
     @Select("select count(*) from orders where date(order_time) between #{begin} and #{end}")
     Integer totalOrderCount(@Param("begin") LocalDate begin, @Param("end") LocalDate end);
+
+    @Select("select * from orders where status = #{status} and order_time < #{time}")
+    List<Orders> getByStatusAndOrderTimeLT(@Param("status") Integer status, @Param("time") LocalDateTime time);
 }

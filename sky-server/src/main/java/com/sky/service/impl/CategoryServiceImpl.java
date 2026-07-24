@@ -9,6 +9,8 @@ import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.CategoryMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealMapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.result.PageResult;
 import com.sky.service.CategoryService;
 import org.springframework.beans.BeanUtils;
@@ -36,8 +38,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public PageResult pageQuery(CategoryPageQueryDTO dto) {
-        List<Category> list = categoryMapper.pageQuery(dto);
-        return new PageResult(list.size(), list);
+        PageHelper.startPage(dto.getPage(), dto.getPageSize());
+        Page<Category> page = categoryMapper.pageQuery(dto);
+        return new PageResult(page.getTotal(), page.getResult());
     }
 
     @Override

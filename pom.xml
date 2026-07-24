@@ -32,6 +32,8 @@
         <jjwt.version>0.9.1</jjwt.version>
         <aliyun-sdk-oss.version>3.15.1</aliyun-sdk-oss.version>
         <hutool.version>5.8.23</hutool.version>
+        <pagehelper.version>1.4.7</pagehelper.version>
+        <weixin-java.version>4.6.0</weixin-java.version>
     </properties>
 
     <dependencyManagement>
@@ -70,6 +72,16 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-pay</artifactId>
+                <version>${weixin-java.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

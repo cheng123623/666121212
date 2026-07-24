@@ -6,6 +6,7 @@ import com.sky.entity.Employee;
 import com.sky.enumeration.OperationType;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import com.github.pagehelper.Page;
 import java.util.List;
 
 @Mapper
@@ -14,7 +15,7 @@ public interface EmployeeMapper {
     @Select("select * from employee where username = #{username}")
     Employee getByUsername(String username);
 
-    List<Employee> pageQuery(EmployeePageQueryDTO dto);
+    Page<Employee> pageQuery(EmployeePageQueryDTO dto);
 
     @AutoFill(OperationType.INSERT)
     void insert(Employee employee);

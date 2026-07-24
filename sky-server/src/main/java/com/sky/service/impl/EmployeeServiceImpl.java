@@ -20,7 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -61,8 +62,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public PageResult pageQuery(EmployeePageQueryDTO dto) {
-        List<Employee> list = employeeMapper.pageQuery(dto);
-        return new PageResult(list.size(), list);
+        PageHelper.startPage(dto.getPage(), dto.getPageSize());
+        Page<Employee> page = employeeMapper.pageQuery(dto);
+        return new PageResult(page.getTotal(), page.getResult());
     }
 
     @Override

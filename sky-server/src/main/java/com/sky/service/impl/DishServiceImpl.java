@@ -6,6 +6,8 @@ import com.sky.entity.Category;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
 import com.sky.mapper.CategoryMapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.result.PageResult;
@@ -44,16 +46,17 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public PageResult pageQuery(DishPageQueryDTO dto) {
-        List<Dish> list = dishMapper.pageQuery(dto);
+        PageHelper.startPage(dto.getPage(), dto.getPageSize());
+        Page<Dish> page = dishMapper.pageQuery(dto);
         List<DishVO> voList = new ArrayList<>();
-        for (Dish dish : list) {
+        for (Dish dish : page.getResult()) {
             DishVO vo = new DishVO();
             BeanUtils.copyProperties(dish, vo);
             Category category = categoryMapper.getById(dish.getCategoryId());
             if (category != null) vo.setCategoryName(category.getName());
             voList.add(vo);
         }
-        return new PageResult(voList.size(), voList);
+        return new PageResult(page.getTotal(), voList);
     }
 
     @Override

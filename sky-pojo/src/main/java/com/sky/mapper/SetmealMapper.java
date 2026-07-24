@@ -4,7 +4,7 @@ import com.sky.annotation.AutoFill;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
 import com.sky.enumeration.OperationType;
-import org.apache.ibatis.annotations.Delete;
+import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -17,7 +17,7 @@ public interface SetmealMapper {
     @AutoFill(OperationType.INSERT)
     void insert(Setmeal setmeal);
 
-    List<Setmeal> pageQuery(SetmealPageQueryDTO dto);
+    Page<Setmeal> pageQuery(SetmealPageQueryDTO dto);
 
     @AutoFill(OperationType.UPDATE)
     void update(Setmeal setmeal);

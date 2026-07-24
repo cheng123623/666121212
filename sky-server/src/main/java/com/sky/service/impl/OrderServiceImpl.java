@@ -1,5 +1,7 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.OrdersCancelDTO;
@@ -11,13 +13,17 @@ import com.sky.mapper.*;
 import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
+import com.alibaba.fastjson2.JSON;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -33,6 +39,8 @@ public class OrderServiceImpl implements OrderService {
     private AddressBookMapper addressBookMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     @Override
     @Transactional
@@ -65,6 +73,13 @@ public class OrderServiceImpl implements OrderService {
         orderDetailMapper.insertBatch(details);
         shoppingCartMapper.deleteByUserId(BaseContext.getCurrentId());
 
+        // WebSocket通知管理端 - 来单提醒
+        Map<String, Object> notifyMap = new HashMap<>();
+        notifyMap.put("type", 1);
+        notifyMap.put("orderId", order.getId());
+        notifyMap.put("content", "您有新的订单，请及时处理");
+        webSocketServer.sendToAllClient(JSON.toJSONString(notifyMap));
+
         OrderVO vo = new OrderVO();
         BeanUtils.copyProperties(order, vo);
         return vo;
@@ -72,14 +87,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public PageResult pageQuery(OrdersPageQueryDTO dto) {
-        List<Orders> list = orderMapper.pageQuery(dto);
+        PageHelper.startPage(dto.getPage(), dto.getPageSize());
+        Page<Orders> page = orderMapper.pageQuery(dto);
         List<OrderVO> voList = new ArrayList<>();
-        for (Orders o : list) {
+        for (Orders o : page.getResult()) {
             OrderVO vo = new OrderVO();
             BeanUtils.copyProperties(o, vo);
             voList.add(vo);
         }
-        return new PageResult(voList.size(), voList);
+        return new PageResult(page.getTotal(), voList);
     }
 
     @Override
