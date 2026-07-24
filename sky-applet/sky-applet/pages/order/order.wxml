@@ -1,0 +1,9 @@
+<view class="tabs"><view wx:for="{{statusTabs}}" wx:key="value" class="tab {{currentStatus===item.value?'active':''}}" bindtap="switchTab" data-status="{{item.value}}">{{item.label}}</view></view>
+<view class="container">
+  <view wx:for="{{orders}}" wx:key="id" class="card order-card" bindtap="goDetail" data-id="{{item.id}}">
+    <view class="order-header"><text class="order-no">{{item.number}}</text><text class="tag tag-info">{{item.statusText}}</text></view>
+    <view class="order-body"><text class="order-name">{{item.consignee}}</text>
+    <text class="price">¥{{item.amount}}</text></view>
+    <view class="order-time">{{item.orderTime}}</view>
+  </view>
+</view>

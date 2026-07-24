@@ -1,0 +1,7 @@
+.cart-item{display:flex;align-items:center}.cart-img{width:120rpx;height:120rpx;border-radius:8rpx;margin-right:20rpx}
+.cart-info{flex:1}.cart-name{font-weight:bold;font-size:28rpx}.cart-flavor{color:#999;font-size:24rpx}
+.cart-qty{display:flex;align-items:center}
+.cart-qty text{width:48rpx;height:48rpx;line-height:48rpx;text-align:center;background:#f5f5f5;border-radius:8rpx;font-size:28rpx}
+.cart-qty text:nth-child(2){width:60rpx;background:#fff}
+.btn-primary{padding:0 40rpx;height:72rpx;line-height:72rpx;font-size:28rpx}
+.bottom-bar{position:fixed;bottom:0;width:100%;display:flex;justify-content:space-between;align-items:center;background:#fff;padding:16rpx 24rpx;box-sizing:border-box;box-shadow:0 -2rpx 8rpx rgba(0,0,0,.05)}

@@ -1,0 +1,8 @@
+.hero-img{width:100%;height:400rpx}
+.bottom-bar{position:fixed;bottom:0;width:100%;display:flex;align-items:center;background:#fff;padding:16rpx 24rpx;box-sizing:border-box;box-shadow:0 -2rpx 8rpx rgba(0,0,0,.05)}
+.qty-ctrl{display:flex;align-items:center;margin-right:30rpx}
+.qty-ctrl text{width:56rpx;height:56rpx;line-height:56rpx;text-align:center;background:#f5f5f5;border-radius:8rpx;font-size:32rpx}
+.qty-ctrl text:nth-child(2){width:60rpx;background:#fff;font-size:28rpx}
+.btn-primary{flex:1;height:72rpx;line-height:72rpx;text-align:center;font-size:30rpx}
+.flavor-group{margin-bottom:20rpx}.flavor-label{font-weight:bold;display:block;margin-bottom:10rpx}
+.flavor-opt{display:inline-block;margin-right:16rpx;font-size:26rpx}

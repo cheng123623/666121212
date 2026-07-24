@@ -1,0 +1,10 @@
+<view class="container">
+  <view wx:for="{{addresses}}" wx:key="id" class="card addr-card">
+    <view class="addr-top"><text class="addr-name">{{item.consignee}}</text><text class="addr-phone">{{item.phone}}</text></view>
+    <view class="addr-detail">{{item.provinceName}}{{item.cityName}}{{item.districtName}}{{item.detail}}</view>
+    <view class="addr-footer"><text class="tag tag-warn" wx:if="{{item.label}}">{{item.label}}</text>
+    <text class="tag tag-success" wx:if="{{item.isDefault===1}}">默认</text>
+    <view class="addr-actions"><text bindtap="edit" data-id="{{item.id}}">编辑</text><text bindtap="del" data-id="{{item.id}}" style="color:#ff4d4f">删除</text></view></view>
+  </view>
+  <navigator url="/pages/address-add/address-add" class="btn-primary add-btn">新增地址</navigator>
+</view>

@@ -1,0 +1,13 @@
+<view class="container">
+  <view wx:if="{{cart.length===0}}" style="text-align:center;padding-top:200rpx;color:#999">购物车为空<view style="margin-top:20rpx"><navigator url="/pages/index/index" class="btn-primary" style="display:inline-block;padding:16rpx 40rpx">去逛逛</navigator></view></view>
+  <view wx:for="{{cart}}" wx:key="id" class="card cart-item">
+    <image src="http://localhost:8080/uploads/{{item.image}}" mode="aspectFill" class="cart-img"></image>
+    <view class="cart-info"><view class="cart-name">{{item.name}}</view>
+    <view class="cart-flavor" wx:if="{{item.dishFlavor}}">{{item.dishFlavor}}</view>
+    <view class="price">¥{{item.amount}}</view></view>
+    <view class="cart-qty"><text bindtap="sub" data-id="{{item.id}}" data-index="{{index}}">-</text>
+    <text>{{item.number}}</text><text bindtap="add" data-id="{{item.id}}" data-index="{{index}}">+</text></view>
+  </view>
+</view>
+<view class="bottom-bar" wx:if="{{cart.length>0}}"><text>合计: <text class="price">¥{{total}}</text></text>
+<button class="btn-primary" bindtap="checkout" style="width:200rpx">去结算</button></view>

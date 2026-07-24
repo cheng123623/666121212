@@ -1,0 +1,2 @@
+<view class="login-container"><view class="logo">苍穹外卖</view><view class="desc">微信一键登录</view>
+<button class="btn-login" bindtap="handleLogin" loading="{{loading}}">微信登录</button></view>

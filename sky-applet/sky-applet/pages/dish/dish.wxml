@@ -1,0 +1,16 @@
+<image src="http://localhost:8080/uploads/{{dish.image}}" mode="aspectFill" class="hero-img"></image>
+<view class="container">
+  <view class="card"><view class="dish-name">{{dish.name}}</view><view class="price">¥{{dish.price}}</view>
+  <view class="dish-desc">{{dish.description}}</view></view>
+  <view class="card" wx:if="{{dish.flavors && dish.flavors.length>0}}">
+    <view wx:for="{{dish.flavors}}" wx:key="name" class="flavor-group"><text class="flavor-label">{{item.name}}</text>
+      <radio-group bindchange="onFlavorChange" data-index="{{index}}">
+        <label wx:for="{{item.value.split(',')}}" wx:key="*this" wx:for-item="v" class="flavor-opt">
+          <radio value="{{v}}" checked="{{selectedFlavors[index]===v}}"/>{{v}}
+        </label>
+      </radio-group>
+    </view>
+  </view>
+</view>
+<view class="bottom-bar"><view class="qty-ctrl"><text bindtap="minus">-</text><text>{{quantity}}</text><text bindtap="plus">+</text></view>
+<button class="btn-primary" bindtap="addCart">加入购物车</button></view>

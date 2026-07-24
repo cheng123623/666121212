@@ -1,0 +1,6 @@
+.tabs{white-space:nowrap;background:#fff;padding:16rpx 0;border-bottom:1rpx solid #eee}
+.tab{display:inline-block;padding:12rpx 24rpx;font-size:26rpx}
+.tab.active{color:#ffc200;font-weight:bold}
+.order-card{margin-bottom:16rpx}.order-header{display:flex;justify-content:space-between;margin-bottom:12rpx}
+.order-no{font-size:24rpx;color:#999}.order-body{display:flex;justify-content:space-between;margin-bottom:8rpx}
+.order-name{font-weight:bold}.order-time{font-size:24rpx;color:#999}

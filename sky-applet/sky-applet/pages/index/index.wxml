@@ -1,0 +1,15 @@
+<scroll-view scroll-x class="category-tabs">
+  <view wx:for="{{categories}}" wx:key="id" class="tab-item {{currentId===item.id?'active':''}}" bindtap="switchTab" data-id="{{item.id}}">{{item.name}}</view>
+</scroll-view>
+<view class="container">
+  <view wx:for="{{dishes}}" wx:key="id" class="card dish-card" bindtap="goDetail" data-id="{{item.id}}">
+    <image src="http://localhost:8080/uploads/{{item.image}}" mode="aspectFill" class="dish-img"></image>
+    <view class="dish-info"><view class="dish-name">{{item.name}}</view>
+    <view class="dish-desc">{{item.description}}</view>
+    <view class="price">¥{{item.price}}</view></view>
+  </view>
+</view>
+<view class="cart-float" bindtap="goCart">
+  <text class="cart-badge" wx:if="{{cartCount>0}}">{{cartCount}}</text>
+  <text>🛒</text>
+</view>

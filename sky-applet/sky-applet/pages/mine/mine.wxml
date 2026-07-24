@@ -1,0 +1,6 @@
+<view class="mine-header"><image src="/images/avatar.png" class="avatar" mode="aspectFill"></image><view class="mine-name">用户{{userId}}</view></view>
+<view class="card menu-list">
+  <navigator url="/pages/address/address" class="menu-item"><text>我的地址</text><text>›</text></navigator>
+  <view class="menu-item"><text>关于我们</text><text>›</text></view>
+</view>
+<button class="logout-btn" bindtap="logout">退出登录</button>
